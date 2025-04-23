@@ -72,8 +72,14 @@ export const createReferralHandler = asyncHandler(
 );
 
 export const getAllReferralsHandler = asyncHandler(
-  async (_req: Request, res: Response) => {
-    const referrals = await ReferralModel.find();
+  async (req: Request, res: Response) => {
+    const { userId } = req;
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: userId missing in request" });
+    }
+    const referrals = await ReferralModel.find({ createdBy: userId });
     res.json(referrals);
   }
 );
