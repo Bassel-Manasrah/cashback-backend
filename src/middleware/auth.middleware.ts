@@ -26,32 +26,36 @@ export const authenticateToken = (
     return next();
   }
 
+  return next();
+
+  //// TODO: UNCOMMENT THIS CHUNK OF CODE
+
   // Skip authentication for /auth routes
-  if (req.path.startsWith("/auth")) {
-    return next();
-  }
+  // if (req.path.startsWith("/auth")) {
+  //   return next();
+  // }
 
-  const authHeader = req.headers["authorization"];
-  // Token is expected in the format: Bearer <token>
-  const token = authHeader && authHeader.split(" ")[1];
+  // const authHeader = req.headers["authorization"];
+  // // Token is expected in the format: Bearer <token>
+  // const token = authHeader && authHeader.split(" ")[1];
 
-  if (token == null) {
-    // No token provided
-    res.status(401).json({ message: "Unauthorized: No token provided." });
-    return;
-  }
+  // if (token == null) {
+  //   // No token provided
+  //   res.status(401).json({ message: "Unauthorized: No token provided." });
+  //   return;
+  // }
 
-  jwt.verify(token, JWT_SECRET, (err: any, payload: any) => {
-    if (err) {
-      // Token is invalid (e.g., expired, wrong signature)
-      console.error("JWT Verification Error:", err.message);
-      res.status(403).json({ message: "Forbidden: Invalid token." });
-      return;
-    }
+  // jwt.verify(token, JWT_SECRET, (err: any, payload: any) => {
+  //   if (err) {
+  //     // Token is invalid (e.g., expired, wrong signature)
+  //     console.error("JWT Verification Error:", err.message);
+  //     res.status(403).json({ message: "Forbidden: Invalid token." });
+  //     return;
+  //   }
 
-    // Token is valid, attach payload to request object
-    req.userId = payload.userId;
-    req.phoneNumber = payload.phoneNumber;
-    next();
-  });
+  //   // Token is valid, attach payload to request object
+  //   req.userId = payload.userId;
+  //   req.phoneNumber = payload.phoneNumber;
+  //   next();
+  // });
 };
