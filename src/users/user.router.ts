@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   acceptTermsOfService,
   fillData,
+  getAllUsersAdmin,
   uploadProfilePicture,
 } from "./user.controller";
 import UserModel from "./user.model";
@@ -36,5 +37,7 @@ router.get("/me", async (req, res): Promise<void> => {
   }
   res.json(user);
 });
+
+router.get("/all", getAllUsersAdmin);
 
 export default router;

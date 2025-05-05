@@ -8,6 +8,11 @@ const router = express.Router();
 // Body: { "phoneNumber": "+1234567890" }
 router.post("/request-otp", AuthController.handleRequestOtp);
 
+// Route for admin login
+// POST /api/auth/admin-login
+// Body: { "username": "admin", "password": "secret" }
+router.post("/admin-login", AuthController.handleAdminLogin);
+
 // Route to verify an OTP and get a JWT
 // POST /api/auth/verify-otp
 // Body: { "phoneNumber": "+1234567890", "otp": "123456" }

@@ -32,6 +32,26 @@ export const requestOtp = async (phoneNumber: string): Promise<boolean> => {
   }
 };
 
+export const generateAdminToken = async (
+  username: string,
+  password: string
+): Promise<string | null> => {
+  try {
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (username === adminUsername && password === adminPassword) {
+      const payload = { userId: "ADMIN" };
+      const token = jwt.sign(payload, JWT_SECRET);
+      return token;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error generating admin token:", error);
+    return null;
+  }
+};
+
 export const verifyOtp = async (
   phoneNumber: string,
   otp: string

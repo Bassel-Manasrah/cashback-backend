@@ -7,6 +7,7 @@ declare global {
     interface Request {
       userId?: string;
       phoneNumber?: string;
+      isAdmin?: boolean;
     }
   }
 }
@@ -21,13 +22,15 @@ export const authenticateToken = (
   next: NextFunction
 ): void => {
   // Check environment for development mode
-  if (process.env.NODE_ENV === "development") {
-    req.userId = "developmentUser";
-    return next();
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   req.userId = "developmentUser";
+  //   req.isAdmin = false;
+  //   return next();
+  // }
 
   // Skip authentication for /auth routes
   if (req.path.startsWith("/auth")) {
+    req.isAdmin = false;
     return next();
   }
 
@@ -52,6 +55,7 @@ export const authenticateToken = (
     // Token is valid, attach payload to request object
     req.userId = payload.userId;
     req.phoneNumber = payload.phoneNumber;
+    req.isAdmin = payload.userId === "ADMIN";
     next();
   });
 };

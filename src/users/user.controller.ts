@@ -64,6 +64,19 @@ export const acceptTermsOfService = async (
   }
 };
 
+export const getAllUsersAdmin = async (req: Request, res: Response): Promise<any> => {
+  if (!req.isAdmin) {
+    return res.status(403).json({ error: "Forbidden: Admins only" });
+  }
+  try {
+    const users = await UserModel.find({});
+    return res.json(users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+
 export const fillData = async (req: Request, res: Response): Promise<any> => {
   const {
     phoneNumber,

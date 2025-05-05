@@ -1,6 +1,32 @@
 import { Request, Response } from "express";
 import * as AuthService from "./auth.service";
 
+export const handleAdminLogin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).json({ message: "Username and password are required." });
+    return;
+  }
+
+  try {
+    const token = await AuthService.generateAdminToken(username, password);
+    if (token) {
+      res
+        .status(200)
+        .json({ message: "Admin authenticated successfully.", token });
+    } else {
+      res.status(401).json({ message: "Invalid admin credentials." });
+    }
+  } catch (error) {
+    console.error("Error in handleAdminLogin:", error);
+    res.status(500).json({ message: "An internal server error occurred." });
+  }
+};
+
 export const handleRequestOtp = async (
   req: Request,
   res: Response
@@ -47,7 +73,9 @@ export const handleVerifyOtp = async (
 
     if (result) {
       const { token, user } = result;
-      res.status(200).json({ message: "OTP verified successfully.", token, user });
+      res
+        .status(200)
+        .json({ message: "OTP verified successfully.", token, user });
     } else {
       res.status(401).json({ message: "Invalid OTP." });
     }

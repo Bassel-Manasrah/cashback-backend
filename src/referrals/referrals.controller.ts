@@ -100,6 +100,9 @@ export const getReferralByIdHandler = asyncHandler(
 
 export const updateReferralHandler = asyncHandler(
   async (req: Request, res: Response) => {
+    if (!req.isAdmin) {
+      return res.status(403).json({ message: "Forbidden: Admins only" });
+    }
     const { id } = req.params;
     const { status, ...updateData } = req.body;
 

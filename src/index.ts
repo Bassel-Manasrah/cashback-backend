@@ -11,14 +11,16 @@ import leaderboardRoutes from "./leaderboard/leaderboard.routes"; // Import lead
 import packagesRoutes from "./packages/packages.routes"; // Import packages routes
 import { authenticateToken } from "./middleware/auth.middleware"; // Import auth middleware
 import userRouter from "./users/user.router";
+import cors from "cors"; // Import cors
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3003;
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/cashback"; // MongoDB connection URI
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Enable CORS for all origins
 app.use(authenticateToken);
 
 // Referral routes are now handled in src/referrals/referrals.routes.ts
