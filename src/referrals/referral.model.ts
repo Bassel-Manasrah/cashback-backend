@@ -6,13 +6,12 @@ import { ReferralStatus } from "../types/referral"; // Reuse the status type
 // Mongoose handles createdAt and updatedAt automatically with timestamps.
 export interface IReferral extends Document {
   fullName: string;
-
   status: ReferralStatus;
   phoneNumber: string;
-  email: string;
   numberOfLines: number;
   value: number;
   createdBy: string; // Reference to the custom userId of the User who created the referral
+  language: "ar" | "en" | "he"; // New field for language
   // createdAt and updatedAt are handled by Mongoose timestamps
 }
 
@@ -26,10 +25,14 @@ const ReferralSchema: Schema = new Schema(
       required: true,
     },
     phoneNumber: { type: String, required: true },
-    email: { type: String, required: true }, // Add validation later if needed
     numberOfLines: { type: Number, required: true },
     value: { type: Number, required: true },
     createdBy: { type: String, required: true }, // Store the custom userId of the User who created the referral
+    language: {
+      type: String,
+      enum: ["ar", "en", "he"],
+      required: true, // Language is now required
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

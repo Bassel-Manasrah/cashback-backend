@@ -187,6 +187,7 @@ export const validateCreateReferral = validateReferralData([
   "email",
   "numberOfLines",
   "value",
+  "language", // Added language to required fields
 ]);
 
 export const validateUpdateReferral = validateReferralData([
@@ -196,4 +197,5 @@ export const validateUpdateReferral = validateReferralData([
   "numberOfLines",
   "value",
   "status",
+  "language", // Added language to required fields
 ]);
