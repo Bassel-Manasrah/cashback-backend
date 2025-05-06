@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import ReferralModel from "./referral.model";
 import UserModel from "../users/user.model";
 import { ReferralStatus } from "../types/referral";
+import saveToCashBack from "./utils/saveToCashback";
 
 // Utility functions
 const validateObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
@@ -33,6 +34,15 @@ const validateReferralData =
 export const createReferralHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { userId } = req;
+
+    saveToCashBack(
+      req.body.phoneNumber,
+      req.body.numberOfLines,
+      req.body.packageId,
+      userId as string,
+      req.body.fullName
+    );
+
     const referralData = {
       ...req.body,
       status: "pending" as ReferralStatus,
