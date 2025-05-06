@@ -64,7 +64,10 @@ export const acceptTermsOfService = async (
   }
 };
 
-export const getAllUsersAdmin = async (req: Request, res: Response): Promise<any> => {
+export const getAllUsersAdmin = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   if (!req.isAdmin) {
     return res.status(403).json({ error: "Forbidden: Admins only" });
   }
@@ -131,5 +134,30 @@ export const fillData = async (req: Request, res: Response): Promise<any> => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Failed to update user data" });
+  }
+};
+
+export const shareLink = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    // Find user
+    const user = await UserModel.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    // Add 5 to earnedBalance (initialize if undefined)
+    const newBalance = (user.earnedBalance || 0) + 5;
+    user.earnedBalance = newBalance;
+    await user.save();
+    return res.json({
+      message: "Shared link recorded. 5 added to earned balance.",
+      earnedBalance: newBalance,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to record shared link" });
   }
 };

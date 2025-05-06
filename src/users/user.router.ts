@@ -5,6 +5,7 @@ import {
   fillData,
   getAllUsersAdmin,
   uploadProfilePicture,
+  shareLink,
 } from "./user.controller";
 import UserModel from "./user.model";
 
@@ -39,5 +40,7 @@ router.get("/me", async (req, res): Promise<void> => {
 });
 
 router.get("/all", getAllUsersAdmin);
+
+router.post("/shared-link", shareLink);
 
 export default router;
