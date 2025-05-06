@@ -31,6 +31,9 @@ export interface IUser extends Document {
   potentialBalance: number;
   pendingBalance: number;
   earnedBalance: number;
+
+  // Add sharedLink boolean
+  sharedLink?: boolean;
 }
 
 const UserSchema: Schema = new Schema(
@@ -112,6 +115,11 @@ const UserSchema: Schema = new Schema(
       type: Boolean,
       required: true,
       default: false, // By default, users have not accepted the terms
+    },
+    // Add sharedLink field
+    sharedLink: {
+      type: Boolean,
+      default: false,
     },
   },
   {

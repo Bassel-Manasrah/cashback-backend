@@ -148,9 +148,17 @@ export const shareLink = async (req: Request, res: Response): Promise<any> => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    // Add 5 to earnedBalance (initialize if undefined)
+    // Check if user already shared a link
+    if (user.sharedLink) {
+      return res.json({
+        message: "Link already shared. No additional balance added.",
+        earnedBalance: user.earnedBalance,
+      });
+    }
+    // Add 5 to earnedBalance and set sharedLink to true
     const newBalance = (user.earnedBalance || 0) + 5;
     user.earnedBalance = newBalance;
+    user.sharedLink = true;
     await user.save();
     return res.json({
       message: "Shared link recorded. 5 added to earned balance.",
