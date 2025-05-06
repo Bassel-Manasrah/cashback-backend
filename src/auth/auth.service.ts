@@ -79,6 +79,22 @@ export const verifyOtp = async (
       console.log(`New user created for ${phoneNumber} with ID: ${user.id}`);
     }
 
+    // create the user in the zolzolzol system as well
+    const params = new URLSearchParams();
+    params.append("name", user.fullName as string);
+    params.append("phone", user.phoneNumber);
+
+    fetch("https://www.zolzolzol.co.il/api/addNewCashBacker", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+
     // Generate JWT including the user's ID
     const tokenPayload = { userId: user.id, phoneNumber: user.phoneNumber }; // Include user ID and phone number
     const token = jwt.sign(tokenPayload, JWT_SECRET);
