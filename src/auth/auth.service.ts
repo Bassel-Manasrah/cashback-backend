@@ -22,6 +22,17 @@ export const requestOtp = async (phoneNumber: string): Promise<boolean> => {
     );
 
     // TODO: send the OTP to the user's phone number using an SMS gateway
+
+    const response = await fetch(
+      `https://www.zolzolzol.co.il/api/setOtpCode/1?phone=${phoneNumber}&code=${otp}`
+    );
+
+    if (!response.ok) {
+      console.error("Failed to send OTP to the user's phone number");
+      return false;
+    }
+
+    // For demonstration, we will log the OTP to the console
     // For demonstration, we will log the OTP to the console
     console.log(`OTP for ${phoneNumber}: ${otp}`);
 
@@ -57,19 +68,17 @@ export const verifyOtp = async (
   otp: string
 ): Promise<{ token: string; user: any } | null> => {
   try {
-    //// TODO: UNCOMMENT THIS CHUNK OF CODE
+    const otpRecord = await OtpModel.findOne({ phoneNumber });
 
-    // const otpRecord = await OtpModel.findOne({ phoneNumber });
+    if (!otpRecord) {
+      console.log(`No OTP record found for ${phoneNumber}`);
+      return null;
+    }
 
-    // if (!otpRecord) {
-    //   console.log(`No OTP record found for ${phoneNumber}`);
-    //   return null;
-    // }
-
-    // if (otpRecord.otp !== otp) {
-    //   console.log(`Invalid OTP provided for ${phoneNumber}`);
-    //   return null; // Invalid OTP
-    // }
+    if (otpRecord.otp !== otp) {
+      console.log(`Invalid OTP provided for ${phoneNumber}`);
+      return null; // Invalid OTP
+    }
 
     // OTP is valid, find or create the user
     let user = await UserModel.findOne({ phoneNumber });
@@ -78,22 +87,6 @@ export const verifyOtp = async (
       user = await UserModel.create({ phoneNumber });
       console.log(`New user created for ${phoneNumber} with ID: ${user.id}`);
     }
-
-    // create the user in the zolzolzol system as well
-    const params = new URLSearchParams();
-    params.append("name", user.fullName as string);
-    params.append("phone", user.phoneNumber);
-
-    fetch("https://www.zolzolzol.co.il/api/addNewCashBacker", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: params.toString(),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
 
     // Generate JWT including the user's ID
     const tokenPayload = { userId: user.id, phoneNumber: user.phoneNumber }; // Include user ID and phone number
