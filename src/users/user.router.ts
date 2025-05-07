@@ -19,6 +19,21 @@ router.post(
   uploadProfilePicture
 );
 
+router.post("/profile-picture-url", async (req, res) => {
+  console.log(req);
+
+  // get the url from the request
+  const url = req.body.url;
+  const userId = req.userId;
+
+  // update the user with the new profile picture url
+  const user = await UserModel.findOneAndUpdate(
+    { id: userId },
+    { profilePictureUrl: url }
+  );
+  res.json(user);
+});
+
 router.post("/accept-terms", acceptTermsOfService);
 
 router.post("/fill-data", fillData);
