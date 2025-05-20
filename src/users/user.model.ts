@@ -50,6 +50,9 @@ const UserSchema: Schema = new Schema(
       unique: true, // Ensure phone numbers are unique
       // Add validation for phone number format if needed
     },
+    cashbackerId: {
+      type: String,
+    },
     userType: {
       type: String,
       enum: ["individual", "installer", "store"],

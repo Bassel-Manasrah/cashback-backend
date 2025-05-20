@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserModel from "./user.model";
 import { uploadImageToSupabase } from "../supabase/uploadImage";
+import addNewCashbacker from "../referrals/utils/addNewCashbacker";
 
 // POST /users/profile-picture
 export const uploadProfilePicture = async (
@@ -99,6 +100,8 @@ export const fillData = async (req: Request, res: Response): Promise<any> => {
     return res.status(400).json({ error: "User ID is required" });
   }
 
+  const cashbackerId = await addNewCashbacker(fullName, phoneNumber);
+
   console.log({
     ...(phoneNumber && { phoneNumber }),
     ...(fullName && { fullName }),
@@ -120,6 +123,7 @@ export const fillData = async (req: Request, res: Response): Promise<any> => {
         ...(storeName && { storeName }),
         ...(storeOwnerName && { ownerName: storeOwnerName }), // Corrected field name
         ...(image && { imageUrl: image }), // Corrected field name
+        ...(cashbackerId && { cashbackerId }),
       },
       { new: true }
     );
@@ -130,7 +134,10 @@ export const fillData = async (req: Request, res: Response): Promise<any> => {
 
     console.log("User data updated successfully", user);
 
-    return res.json({ message: "User data updated successfully", user });
+    return res.json({
+      message: "User data updated successfully",
+      user,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Failed to update user data" });
